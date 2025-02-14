@@ -1,10 +1,14 @@
-all:
-	rm *~
-	cat README.md | md-to-pdf > BrightSign-coding-test.pdf
+# Install dependencies
+install:
+	npm install
 
+# Run the program using ts-node (no build needed)
+run: install
+	npm start http://test.brightsign.io:3000
 
-# install tool from https://github.com/simonhaenisch/md-to-pdf
-install-tools:
-	npm i -g md-to-pdf
+# Clean node_modules if needed
+clean:
+	rm -rf node_modules
 
-
+# Default action
+all: run

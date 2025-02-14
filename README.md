@@ -1,52 +1,38 @@
-# Take-Home Coding Assignment
 
-## JSON REST client
+## 🏃 Running the Project
 
-This coding assignment will allow us to evaluate your ability to write a REST client that processes JSON data.  This is aimed at a more senior Engineer.
+To keep iteration fast and lightweight(given that this is a small project), I setup the project to run TypeScript **without compiling**. You can execute it directly via:
 
-When assigned this test you will also be instructed if there is a preferred language to use, usually typescript, C++ or golang.  If not directed otherwise,
-you may use any language you like. We are looking for clean, simple code that works and that is easy to read and understand.
+```sh
+make run
+```
 
-Please follow these instructions *exactly* and carefully read the requirements below.  We will ignore any submissions that don't follow these instructions.
+## 📦 Handling NDJSON
 
-## Instructions
+While fetching data, I realized that the API **returns NDJSON** (newline-delimited JSON). I made the decsion to **process it line by line** instead of converting all lines into a standard Json array, so we can reject only the malformed lines and process the analysis on the remainging data. I understand this may not always be the right decsion in every project, considering if large amounts of the data are malformed the analysis results would be unhelpful. 
 
-The program should query "http://test.brightsign.io:3000" and process the data returned. NOTE: the data returned is not real data and is not sensitive.
+## 📊 Data Interpretation Choices
 
-The data returned is a JSON array and it changes on each call to the server.  The data is an array of user objects.
-There is no further documentation on the format of the data.  You must figure it out from the data itself.  Please consider this as part of the test, and document your findings in your README.
+I went with my best judgement on analysis requirements that I wasn't 100% sure on:
 
-Using the data retreived from the endpoint, calculate #1 and #2.  Unless you have been asked to do more the other tasks are optional, but will be considered as extra credit.
+- **Most common first name in all cities** → Only counts **users**, and none of their friends.  
+- **Most common hobby of all friends of users in all cities** → Includes **friends’ hobbies**, since friends is mentioned explicitly
 
-## Calculations
 
-1. average age of all users per city
-2. average number of friends per city
-3. the user with the most friends per city
-4. the most common first name in all cities
-5. the most common hobby of all friends of users in all cities
+## 🛡️ Security Considerations
 
-## Output
+This is a small test project, but if it were being used in production, here are some ideas top of my mind that would need to be addressed:
 
-The data output must be in JSON format suitable for analysis with a CLI tool like jq.
+### **Handling API Keys Securely**
+If the API required authentication (e.g., API keys or OAuth), we’d make sure to **store credentials in environment variables/vaults/secretes**, not in the code.
 
-## Requirements
+### **Keeping Logs Clean & Safe**
+- Errors currently go to `stderr`, which is fine, but in a real system, **we wouldn’t want to log full API responses** if they contain sensitive data.  
+- If this were handling real user data, we’d need to **make sure logs don’t leak personal info (PII)**.
 
-PLEAE READ AND FOLLOW ALL THE INSTRUCTIONS.  We will ignore any submission that does not follow these instructions.
+### **Dealing with Malicious Input**
+- Since we’re **parsing NDJSON line by line**, it’s possible for an attacker to sneak in **malicious payloads**.
+- A **sanitization step** before processing untrusted data would help prevent issues.
 
-* The challenge is to do a simple REST implementation of this protocol yourself
-* Command line only - no GUI wanted or needed.  Please don't do a GUI
-* Must run on the command line (terminal), accepting the endpoint to be queried as a command line parameter and returning the data desired
-* Program must query the API for a result over the network
-* The program must be able to be run repeatedly and process the data correctly each time, even if the data changes
-* The program must handle reasonable error conditions
-* All source code for the program must be in a public GitHub repository
-* You should assume we will clone your repo and test it personally
-* You should "think unix philosophy" and consider how this kind of tool would build your toolbox
-* Provide some kind of README explaining your work and how others would use it
-* Consider security in your solution, even if it's just discussing it in your README
-* This is an example of your work.  Don't make a career out of it but take the time to do a decent job
 
-## Submission
 
-Please just submit the URL of the public GitHub repository you used for this assignment.
