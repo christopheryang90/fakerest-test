@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "type": "module",
     "scripts": {
-        "start": "ts-node src/index.ts",
-        "debug": "ts-node src/index.ts > debug.log 2>&1"
+        "start": "ts-node --esm src/index.ts",
+        "debug": "ts-node --esm src/index.ts > debug.log 2>&1"
     },
     "dependencies": {
         "axios": "^1.7.9"
